@@ -21,8 +21,8 @@ export const create = async (req, res) => {
 //GET ALL PRODUCTS
 export const getAllproduct = async (req, res) => {
   try {
-    const products = await productModel.find({});
-    return res.status(201).json({
+    const products = await productModel.find({}).populate("category", "name");
+    return res.status(200).json({
       success: true,
       message: "All Product..",
       products: products,

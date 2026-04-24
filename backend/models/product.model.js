@@ -7,7 +7,7 @@ const productSchema=new mongoose.Schema({
     image:String,
     category:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'categoryModel'
+        ref:'categories'
     }
 })
 

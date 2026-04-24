@@ -41,7 +41,7 @@ const SignUp = () => {
         <aside className="auth-aside">
           <div>
             <span className="auth-badge">Premium onboarding</span>
-            <h2 className="mt-3">Create Your PR Commerce Profile</h2>
+            <h2 className="mt-3">Create Your EazeCommerce Profile</h2>
             <div className="auth-points">
               <span>Unlock personalized recommendations instantly</span>
               <span>Get first access to seasonal premium launches</span>

@@ -1,15 +1,38 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import heroImage from "../assets/hero.png";
 import Headers from "./Headers";
-
-const featuredProducts = [
-  { name: "Luxe Leather Tote", label: "New", description: "Minimal carry-all crafted for daily business flow.", price: "$129" },
-  { name: "Aero Smart Watch", label: "Trending", description: "Performance tracking with a refined steel look.", price: "$249" },
-  { name: "Studio Headphones", label: "Editor Pick", description: "High-fidelity sound with a clean matte profile.", price: "$189" },
-  { name: "Desk Lamp Arc", label: "Limited", description: "Architectural lighting for modern workspaces.", price: "$94" },
-];
+import { addProductToCart } from "../utils/cart";
 
 const Home = () => {
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const getTag = (index) => (index % 2 === 0 ? "New" : "Trending");
+
+  const handleAddToCart = (product) => {
+    addProductToCart(product);
+    navigate("/cart");
+  };
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const res = await axios.get("http://localhost:3200/api/product");
+        const list = res?.data?.products || [];
+        setFeaturedProducts(Array.isArray(list) ? list.slice(0, 4) : []);
+      } catch (error) {
+        setFeaturedProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getProducts();
+  }, []);
+
   return (
     <div className="page-shell">
       <Headers />
@@ -61,21 +84,30 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="product-grid">
-          {featuredProducts.map((product) => (
-            <article className="card-premium product-card" key={product.name}>
-              <span className="product-chip">{product.label}</span>
-              <h3 className="product-name">{product.name}</h3>
-              <p className="product-text">{product.description}</p>
-              <div className="product-footer">
-                <span className="price">{product.price}</span>
-                <Link className="btn-cta btn-cta-secondary" to="/products">
-                  View
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
+        {loading ? (
+          <p className="section-note">Loading products...</p>
+        ) : featuredProducts.length === 0 ? (
+          <p className="section-note">No product data found.</p>
+        ) : (
+          <div className="product-grid">
+            {featuredProducts.map((product, index) => (
+              <article className="card-premium product-card" key={product._id || product.title}>
+                <span className="product-chip">{getTag(index)}</span>
+                <h3 className="product-name">{product.title}</h3>
+                <p className="product-text">{product.description || "No description available."}</p>
+                <div className="product-footer">
+                  <span className="price">Rs. {product.price ?? "0"}</span>
+                  <button
+                    className="btn-cta btn-cta-secondary"
+                    onClick={() => handleAddToCart(product)}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

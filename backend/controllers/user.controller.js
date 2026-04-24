@@ -6,7 +6,7 @@ import envConfig from "../configs/envConfig.js";
 //SIGN UP
 export const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body || {};
 
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -68,7 +68,7 @@ export const getAllUsers = async (req, res) => {
 
 export const login=async(req,res)=>{
     try {
-        const {email,password}=req.body
+        const {email,password}=req.body || {}
 
         if(!email || !password){
             return res.status(400).json({

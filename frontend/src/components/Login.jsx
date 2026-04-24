@@ -22,6 +22,9 @@ const Login = () => {
     try {
       const res = await axios.post("http://localhost:3200/api/user/login", user);
 
+      localStorage.setItem("token", res?.data?.token || "");
+      localStorage.setItem("user", JSON.stringify(res?.data?.user || null));
+
       toast.success(res.data.message);
 
       setTimeout(() => {
@@ -38,7 +41,7 @@ const Login = () => {
         <aside className="auth-aside">
           <div>
             <span className="auth-badge">Secure access</span>
-            <h2 className="mt-3">Welcome Back To PR Commerce</h2>
+            <h2 className="mt-3">Welcome Back To EazeCommerce</h2>
             <div className="auth-points">
               <span>Fast checkout with saved preferences</span>
               <span>Track orders and delivery in real time</span>
